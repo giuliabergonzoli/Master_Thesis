@@ -1,0 +1,248 @@
+---
+title: "exp_analysis"
+output: html_document
+date: "2023-07-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "D:/magistrale/tesi/dati")
+```
+
+Dataset
+
+```{r}
+studenti <- read.csv("new_studenti.csv", sep = ";", dec = ",")
+
+studenti$DataNascita=as.factor(studenti$DataNascita)
+studenti$Sesso=as.factor(studenti$Sesso)
+studenti$Cittadinanza_bin=as.factor(studenti$Cittadinanza_bin)
+studenti$PEI=as.factor(studenti$PEI)
+studenti$PDB=as.factor(studenti$PDB)
+studenti$StatusFinale_bin_prec=as.factor(studenti$StatusFinale_bin_prec)
+studenti$debito_prec=as.factor(studenti$debito_prec)
+studenti$debito_mate_prec=as.factor(studenti$debito_mate_prec)
+
+#possible responses 
+studenti$voto_ultima_sett=as.factor(studenti$voto_ultima_sett)
+studenti$rischio=as.factor(studenti$rischio)
+#studenti$Matematica_finale=as.factor(studenti$Matematica_finale)
+
+#possible random effects
+#studenti$Settore=as.factor(studenti$Settore)
+#studenti$Classe=as.factor(studenti$Classe)
+
+table(studenti$Sesso)
+table(studenti$Cittadinanza)
+table(studenti$DataNascita)
+table(studenti$PEI)
+table(studenti$PDB)
+table(studenti$Classe)
+table(studenti$Settore)
+table(studenti$Anno)
+```
+
+Male vs Female
+
+```{r}
+cols<-c("deeppink","purple")
+labs<-c("Female", "Male")
+barplot(table(studenti$Sesso), main="Sex", names.arg = labs, col=cols)
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Sesso, names=c("Female","Male"), col=c("orange","red"), data=studenti) #0 Female 1 Male
+boxplot(Italiano_finale ~ Sesso, names=c("Female","Male"), col=c("lightblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ Sesso, names=c("Female","Male"), col=c("green","darkgreen"), data=studenti)
+
+counts=table(studenti$Matematica_finale, studenti$Sesso)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(studenti$Italiano_finale, studenti$Sesso)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(studenti$Inglese_finale, studenti$Sesso)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+```
+Age
+
+```{r}
+par(mfrow=c(1,3)) #-1 under 0 right 1 over
+boxplot(Matematica_finale ~ DataNascita, names=c("Under","Right","Over"), col=c("yellow","orange","red"), data=studenti)
+boxplot(Italiano_finale ~ DataNascita, names=c("Under","Right","Over"), col=c("aquamarine1","lightblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ DataNascita, names=c("Under","Right","Over"), col=c("greenyellow","green","darkgreen"), data=studenti)
+
+counts=table(studenti$Matematica_finale, studenti$DataNascita)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(studenti$Italiano_finale, studenti$DataNascita)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(studenti$Inglese_finale, studenti$DataNascita)
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+```
+
+Country
+
+```{r}
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Cittadinanza_bin, names=c("Italy","Other"), col=c("orange","red"), data=studenti) #0 Foreign students 1 Italian students
+boxplot(Italiano_finale ~ Cittadinanza_bin, names=c("Italy","Other"), col=c("lightblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ Cittadinanza_bin, names=c("Italy","Other"), col=c("green","darkgreen"), data=studenti)
+```
+
+PEI = 1 if the student follows an educational individual plan ("Piano Educativo Individualizzato"), i.e. if the student has disabilities.
+PDB = 1 if the student follows a personalized teaching plan ("Piano Didattico Personalizzato").
+
+```{r}
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ PEI, names=c("Italy","Other"), col=c("orange","red"), data=studenti)
+boxplot(Italiano_finale ~ PEI, names=c("Italy","Other"), col=c("lightblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ PEI, names=c("Italy","Other"), col=c("green","darkgreen"), data=studenti)
+
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ PDB, names=c("Italy","Other"), col=c("orange","red"), data=studenti)
+boxplot(Italiano_finale ~ PDB, names=c("Italy","Other"), col=c("lightblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ PDB, names=c("Italy","Other"), col=c("green","darkgreen"), data=studenti)
+
+```
+
+Type of school
+
+```{r}
+table(studenti$Settore)
+classico=studenti[which(studenti$Settore=="Liceo Classico Paritario"),]
+scientifico=studenti[which(studenti$Settore=="Liceo Scientifico Paritario"),]
+scienze_umane=studenti[which(studenti$Settore=="Liceo Scienze Umane Paritario"),]
+internazionale=studenti[which(studenti$Settore=="Liceo Internazionale per l'Intercultura"),]
+
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Settore, names=c("Class","Inter","Scie","S. Umane"), col=c("yellow","orange","red","darkred"), data=studenti)
+boxplot(Italiano_finale ~ Settore, names=c("Class","Inter","Scie","S. Umane"), col=c("aquamarine1","cyan2","dodgerblue","blue"), data=studenti)
+boxplot(Inglese_finale ~ Settore, names=c("Class","Inter","Scie","S. Umane"), col=c("greenyellow","springgreen","limegreen","darkgreen"), data=studenti)
+
+table(classico$Classe)
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Classe, data=classico)
+boxplot(Italiano_finale ~ Classe, data=classico)
+boxplot(Inglese_finale ~ Classe, data=classico)
+
+table(scientifico$Classe)
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Classe, data=scientifico)
+boxplot(Italiano_finale ~ Classe, data=scientifico)
+boxplot(Inglese_finale ~ Classe, data=scientifico)
+
+table(scienze_umane$Classe)
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Classe, data=scienze_umane)
+boxplot(Italiano_finale ~ Classe, data=scienze_umane)
+boxplot(Inglese_finale ~ Classe, data=scienze_umane)
+
+table(internazionale$Classe)
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Classe, data=internazionale)
+boxplot(Italiano_finale ~ Classe, data=internazionale)
+boxplot(Inglese_finale ~ Classe, data=internazionale)
+
+par(mfrow=c(1,3))
+boxplot(Matematica_finale ~ Classe, data=studenti)
+boxplot(Italiano_finale ~ Classe, data=studenti)
+boxplot(Inglese_finale ~ Classe, data=studenti)
+```
+
+StatusFinale Categorical variable indicating the final state of the student in the selected year (2018-2019).
+P1 =  Passed in June, P2 = Passed in September, B1 = Failed in June, B2 = Failed in September, NS = Not Scrutinized,
+T = Transferred, RT = Withdrawn.
+
+```{r}
+table(studenti$StatusFinale_prec)
+table(studenti$StatusFinale_bin_prec)
+table(studenti$StatusFinale.x)
+table(studenti$StatusFinale_bin)
+
+cols<-c("deeppink","purple")
+labs<-c("Other","June")
+barplot(table(studenti$StatusFinale_bin_prec), main="Previous status", names.arg = labs, col=cols)
+
+cols<-c("deeppink","purple")
+labs<-c("Other","June")
+barplot(table(studenti$StatusFinale_bin), main="Final status", names.arg = labs, col=cols)
+
+hist(studenti$MediaFinale, main="Final mean grade", xlab = "Final mean")
+mean(studenti$MediaFinale)
+quantile(studenti$MediaFinale, 0.25)
+quantile(studenti$MediaFinale, 0.75)
+hist(studenti$Matematica_finale, main="Final math grade", xlab = "Math grade", breaks = 7,col="cadetblue3")
+hist(studenti$Italiano_finale, main="Final italian grade", xlab = "Italian grade", breaks = 7,col="cadetblue3")
+hist(studenti$Inglese_finale, main="Final english grade", xlab = "English grade", breaks = 7,col="cadetblue3")
+
+```
+
+Assenze Number of absences updated weekly.
+Matematica Maths grades average updated weekly.
+Italiano Italian literature grades average updated weekly.
+Inglese English grades average updated weekly.
+NoteMerito Number of notes of merit updated weekly.
+NoteImpegno Number of notes of diligence updated weekly.
+NoteDisc Number of disciplinary notes updated weekly.
+Ritardi Number of delays updated weekly
+
+
+```{r}
+#hist per  media matematica
+cols <- rainbow(41)
+#x11()
+par(mfrow=c(3,3))
+# media mate colonne 32:72
+for (i in 32:72){
+  hist(studenti[,i],breaks=20,freq=FALSE,col=cols[i-32], xlim=c(0,9), ylim=c(0,0.4), xlab="Value")
+}
+
+media_esatta_ins=studenti[which(studenti[,72]<5.45),72]
+voto_pagella_ins=studenti$Matematica_finale[which(studenti$Matematica_finale<=5)]
+voto_ultima_sett_ins=round(media_esatta_ins,0)
+
+
+par(mfrow=c(1,2))
+media_esatta=studenti[,72]
+voto_ultima_sett=round(media_esatta,0)
+hist(voto_ultima_sett,breaks=5)
+voto_pagella=studenti$Matematica_finale
+hist(voto_pagella,breaks=5)
+```
+
+
+
+assenze col 23
+note merito col 25
+note impegno 27
+note disciplinari 29
+ritardi 31
+
+```{r}
+counts=table(voto_ultima_sett, studenti[,23])
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(voto_ultima_sett, studenti[,25])
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(voto_ultima_sett, studenti[,27])
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(voto_ultima_sett, studenti[,29])
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+
+counts=table(voto_ultima_sett, studenti[,31])
+cols=rainbow(10)
+barplot(counts,col=cols,legend=rownames(counts))
+```
