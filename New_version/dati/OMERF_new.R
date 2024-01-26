@@ -108,8 +108,10 @@ omerf= function (y, cov, group, xnam=NULL, znam=NULL, bizero=NULL,
     names(bi)=lev
     diff.t=abs(bi.old-bi)
     n.diff=max(diff.t) #use the infinite norm (max)
-    ind=which(diff.t==n.diff, arr.ind=T)
-    n.old=abs(bi.old[ind])
+    # ind=which(diff.t==n.diff, arr.ind=T)
+    # n.old=abs(bi.old[ind])
+    n.old=max(abs(bi.old))
+    converged= n.diff/n.old <toll
     
     it=it+1
     all.bi[[it]]=bi
