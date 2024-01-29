@@ -7,8 +7,3 @@ In this study, a simulation is conducted to validate the performance of the prop
 The application of OMERF is exemplified in a case study focusing on modeling students at risk of failure from a prestigious high school in Milan, and generally on predicting their academic progress. 
 The model is able to identify discriminating student characteristics and estimate the effect of each class to which students belong.
 
-Contents of the repository:
-- OMERF algorithm in 'OMERF algorithm';
-- Simulation results in 'simulation study'.
-
-The results of the real life application cannot be disclosed due to NDA issues.
