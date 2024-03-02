@@ -92,14 +92,11 @@ omerf= function (y, cov, group, xnam=NULL, znam=NULL, bizero=NULL,
     clmm.bi=ranef(clmm.fit)$group[select]
     
     #convergence of bi
-    bi.old=bi
-    bi=data.frame(t(clmm.bi))
     names(bi)=lev
     diff.t=abs(bi.old-bi)
     n.diff=max(diff.t) #use the infinite norm (max)
-    ind=which(diff.t==n.diff, arr.ind=T)
-    n.old=abs(bi.old[ind])
-    converged= n.diff/n.old <toll
+    n.old=max(abs(bi.old))
+    if(n.old==0) {converged=FALSE} else {converged= n.diff/n.old <toll}
     
     it=it+1
     all.bi[[it]]=bi
