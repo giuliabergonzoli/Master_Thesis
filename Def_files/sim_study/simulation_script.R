@@ -63,8 +63,9 @@ newi.omerf=acc.clm
 
 for(nr in 1:nruns) {
   set.seed(nr)
+  print(nr)
   # train set preparation
-  dati=build.dataset(n,1,prop)
+  dati=build.dataset(n,5,prop)
   y=factor(dati$y.train)
   cov=dati$cov.train
   gr=factor(dati$group.train)
@@ -306,7 +307,7 @@ results.newi[3,4]=max(newi.omerf)
 results.newi[4,4]=min(newi.omerf)
 
 # save the results
-r=2
+r=4
 name.acc=paste('risultati_acc_',r,'.txt', sep='')
 name.mse=paste('risultati_mse_',r,'.txt', sep='')
 name.oc=paste('risultati_oc_',r,'.txt', sep='')

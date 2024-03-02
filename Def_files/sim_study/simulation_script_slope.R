@@ -63,6 +63,7 @@ newi.omerf=acc.clm
 
 for(nr in 1:nruns) {
   set.seed(nr)
+  print(nr)
   # train set preparation
   dati=build.dataset(n,1,1,prop)
   y=factor(dati$y.train)

@@ -16,16 +16,17 @@ treef=function(a,b,c) {
 
 
 build.dataset=function (n,sigma1,sigma2, prop) {
+  #param=matrix with parameters
+  #j=parameter line to be used
   #n=number of data to generate (train+test)
-  #sigma1 and sigma2=variances related to random effects
   #prop=proportion of data to be used for the train
-  
-  #random intercept and random slope
+  #random intercept
   gen.rand <- defData(varname = "b0i", dist = "normal", formula = 0, variance = sigma1,
                          id = "group")
   gen.rand <- defData(gen.rand, varname = "b1i", dist = "normal", formula = 0, variance = sigma2, id = "group")
   gen.rand <- defData(gen.rand,varname = "clustSize", formula = n, dist = "clusterSize")
   dtRandom <- genData(10, gen.rand)
+  head(dtRandom, 10)
   
   # normal  and uniform covariates
   gen.obs <- defDataAdd(varname = "x1", dist = "normal",

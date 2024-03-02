@@ -82,7 +82,6 @@ omerf= function (y, cov, group, xnam=NULL, znam=NULL, bizero=NULL,
   converged=FALSE
   while(!converged && it<itmax) {
     
-    
     clmm.data = data.frame(y,cov[znam],group,eta.est.rf)
     clmm.fit= clmm(clmm.formula, link='logit', data=clmm.data, Hess=TRUE, control=clmm.control(maxLineIter = 500, maxIter=1000, grtol=1e-3))
     
@@ -109,10 +108,25 @@ omerf= function (y, cov, group, xnam=NULL, znam=NULL, bizero=NULL,
     diff.t=abs(bi.old-bi)
     n.diff=max(diff.t) #use the infinite norm (max)
     n.old=max(abs(bi.old))
-    converged= n.diff/n.old <toll
+    #converged= n.diff/n.old <toll
+    #if(it==1) {converged=FALSE} else {converged= n.diff/n.old <toll}
+    if(n.old==0) {converged=FALSE} else {converged= n.diff/n.old <toll}
     
     it=it+1
     all.bi[[it]]=bi
+    
+    # #convergence of bi
+    # bi.old=bi
+    # bi=data.frame(t(clmm.bi))
+    # names(bi)=lev
+    # diff.t=abs(bi.old-bi)
+    # n.diff=max(diff.t) #use the infinite norm (max)
+    # ind=which(diff.t==n.diff, arr.ind=T)
+    # n.old=abs(bi.old[ind])
+    # converged= n.diff/n.old <toll
+    # 
+    # it=it+1
+    # all.bi[[it]]=bi
     
   }
   ###############################################

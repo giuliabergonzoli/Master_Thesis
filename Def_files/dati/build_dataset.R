@@ -16,17 +16,18 @@ treef=function(a,b,c) {
 
 
 build.dataset=function (n,sigma, prop) {
+  #param=matrix with parameters
+  #j=parameter line to be used
   #n=number of data to generate (train+test)
-  #sigma=variance related to random effects
   #prop=proportion of data to be used for the train
-  
   #random intercept
   gen.randInt <- defData(varname = "bi", dist = "normal", formula = 0, variance = sigma,
                          id = "group")
   gen.randInt <- defData(gen.randInt,varname = "clustSize", formula = n, dist = "clusterSize")
   dtRandom <- genData(10, gen.randInt)
+  head(dtRandom, 10)
   
-  # normal and unifrom covariates
+  # normal and uniform covariates
   gen.obs <- defDataAdd(varname = "x1", dist = "normal",
                         formula =  0, variance = 1)
   gen.obs <- defDataAdd(gen.obs, varname = "x2", dist = "normal", 
@@ -46,7 +47,7 @@ build.dataset=function (n,sigma, prop) {
   dtObs <- addColumns(gen.obs, dtObs)
   
   gen.z <- defDataAdd(varname = "z",
-                      formula = "0.7*(3 + 7*x1^2 -5*x2 + x2*x3^2) + 0.3*treef(x4,x5,x6) + bi", dist = "nonrandom")
+                      formula = "0.3*(3 + 7*x1^2 -5*x2 + x2*x3^2) + 0.7*treef(x4,x5,x6) + bi", dist = "nonrandom")
   
   dtObs2 <- addColumns(gen.z, dtObs)
   
