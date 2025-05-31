@@ -90,6 +90,9 @@ omerf= function (y, cov, group, xnam=NULL, znam=NULL, bizero=NULL,
     #I want to maintain the order of the elements of bi
     select=c("(Intercept)",znam) #all bi to be extracted
     clmm.bi=ranef(clmm.fit)$group[select]
+
+    bi.old=bi
+    bi=data.frame(t(clmm.bi))
     
     #convergence of bi
     names(bi)=lev
